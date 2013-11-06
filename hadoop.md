@@ -1,10 +1,58 @@
 # **H-stack Introduction Guide**
 
-*Or just a ["let me google that for you"][1] article*
+*Or just a ["let me google that for you"](http://lmgtfy.com/) article*
 
 --------------------------------
 
-{:toc}
+**Table of Contents** 
+
+- [MapReduce paradigm](#mapreduce-paradigm)
+	- [Basics](#basics)
+	- [MapReduce implementations](#mapreduce-implementations)
+- [Apache Hadoop](#apache-hadoop)
+	- [Overview](#overview)
+	- [Architecture](#architecture)
+		- [Expedience](#expedience)
+		- [Jobs scheduler](#jobs-scheduler)
+		- [Most common problems](#most-common-problems)
+	- [Job design](#job-design)
+	- [Examples](#examples)
+	- [Distributions](#distributions)
+	- [Links & references](#links-&-references)
+- [Apache HDFS](#apache-hdfs)
+	- [Features and overview](#features-and-overview)
+	- [Other supported file systems](#other-supported-file-systems)
+	- [](#-4)
+- [Apache HBase](#apache-hbase)
+	- [Inverted index](#inverted-index)
+	- [Column-oriented DBMS](#column-oriented-dbms)
+	- [API Bindings](#api-bindings)
+	- [Links & references](#links-&-references-1)
+	- [](#-5)
+- [Apache Hive](#apache-hive)
+	- [Overview](#overview-1)
+	- [Internal workflow](#internal-workflow)
+	- [HiveQL](#hiveql)
+		- [Definition & features](#definition-&-features)
+		- [Syntax basics](#syntax-basics)
+		- [HiveQL/SQL comparison](#hiveqlsql-comparison)
+	- [Examples](#examples-1)
+	- [Links & references](#links-&-references-2)
+	- [](#-6)
+- [Apache Pig](#apache-pig)
+	- [Overview](#overview-2)
+	- [Execution modes](#execution-modes)
+	- [PigLatin](#piglatin)
+		- [Definition & features](#definition-&-features-1)
+		- [Syntax basics](#syntax-basics-1)
+		- [PigLatin/HiveQL comparison](#piglatinhiveql-comparison)
+	- [Examples](#examples-2)
+	- [Links & references](#links-&-references-3)
+	- [](#-7)
+- [Other tools](#other-tools)
+	- [Apache Sqoop](#apache-sqoop)
+	- [Cascading](#cascading)
+	- [Scalding](#scalding)
 
 --------------------------------
 
@@ -12,7 +60,7 @@
 
 ## Basics
 
-[MapReduce][2] is a programming model for processing large data sets with a parallel, distributed algorithm on a cluster. 
+[MapReduce][1] is a programming model for processing large data sets with a parallel, distributed algorithm on a cluster. 
 
 The model is inspired by the map and reduce functions commonly used in functional programming, although their purpose in the MapReduce framework is not the same as their original forms. The core idea behind MapReduce is mapping your dataset into a collection of <key, value> pairs, and then reducing over all pairs with the same key. The overall concept is simple, but is actually quite expressive when you consider that:
 
@@ -26,7 +74,7 @@ The canonical MapReduce use case is counting word frequencies in a large text, b
  - web-link graph traversal 
  - machine learning
 
-> ![MapReduce WordCount example][3]
+> ![MapReduce WordCount example](https://dl.dropboxusercontent.com/u/6870375/word_count.png)
 
 A MapReduce program is composed of a Map() procedure that performs filtering and sorting and a Reduce() procedure that performs a summary operation. The "MapReduce System" (also called "infrastructure", "framework") orchestrates by marshalling the distributed servers, running the various tasks in parallel, managing all communications and data transfers between the various parts of the system, providing for redundancy and fault tolerance, and overall management of the whole process. 
 
@@ -135,7 +183,4 @@ Other Hadoop-related projects at Apache include:
 ## Cascading
 ## Scalding
 
-
-  [1]: http://lmgtfy.com/
-  [2]: http://en.wikipedia.org/wiki/MapReduce
-  [3]: https://dl.dropboxusercontent.com/u/6870375/word_count.png
+  [1]: http://en.wikipedia.org/wiki/MapReduce
