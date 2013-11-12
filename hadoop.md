@@ -85,7 +85,7 @@ So, considering the diagram above, the framework takes all stages of processing 
  - Skynet - open-source Ruby implementation.
  - Qizmt - C# implementation by MySpace.
  - Cell Broadband Engine implementation in C.
- - ```FAIL``` DryadLinq - Microsoft Research research project (lol), based on Linq and Microsoft Dryad (*failed - Microsoft had finally chosen Apache Hadoop for their Azure platform*).
+ - `FAIL` DryadLinq - Microsoft Research research project (lol), based on Linq and Microsoft Dryad (*failed - Microsoft had finally chosen Apache Hadoop for their Azure platform*).
  - And a legion of Hadoop-based implementations.
 
 --------------------------------
