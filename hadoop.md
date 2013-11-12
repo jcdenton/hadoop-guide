@@ -4,7 +4,7 @@
 
 --------------------------------
 
-**Table of Contents** 
+# Table of Contents
 
 - [MapReduce paradigm](#mapreduce-paradigm)
 	- [Basics](#basics)
@@ -12,16 +12,12 @@
 - [Apache Hadoop](#apache-hadoop)
 	- [Overview](#overview)
 	- [Architecture](#architecture)
-		- [Expedience](#expedience)
-		- [Jobs scheduler](#jobs-scheduler)
-		- [Most common problems](#most-common-problems)
-	- [Job design](#job-design)
-	- [Examples](#examples)
+	    - [Infrastructure](#infrastructure)
+        - [Apache HDFS](#apache-hdfs)
+        - [Data flow](#data-flow)
+	- [API](#API)
 	- [Distributions](#distributions)
 	- [Links & references](#links-&-references)
-- [Apache HDFS](#apache-hdfs)
-	- [Features and overview](#features-and-overview)
-	- [Other supported file systems](#other-supported-file-systems)
 - [Apache HBase](#apache-hbase)
 	- [Inverted index](#inverted-index)
 	- [Column-oriented DBMS](#column-oriented-dbms)
@@ -56,12 +52,12 @@
 
 ## Basics
 
-[MapReduce][1] is a programming model for processing large data sets with a parallel, distributed algorithm on a cluster. 
+[MapReduce](http://en.wikipedia.org/wiki/MapReduce) is a programming model for processing large data sets with a parallel, distributed algorithm on a cluster. 
 
 The model is inspired by the map and reduce functions commonly used in functional programming, although their purpose in the MapReduce framework is not the same as their original forms. The core idea behind MapReduce is mapping your dataset into a collection of <key, value> pairs, and then reducing over all pairs with the same key. The overall concept is simple, but is actually quite expressive when you consider that:
 
-1. Almost all data can be mapped into <key, value> pairs somehow, and 
-2. Your keys and values may be of any type: strings, integers, dummy types... and, of course, <key, value> pairs themselves.
+ - almost all data can be mapped into <key, value> pairs somehow, and 
+ - your keys and values may be of any type: strings, integers, dummy types... and, of course, <key, value> pairs themselves.
 
 The canonical MapReduce use case is counting word frequencies in a large text, but some examples of what you can do in the MapReduce framework include:
 
@@ -89,7 +85,7 @@ So, considering the diagram above, the framework takes all stages of processing 
  - Skynet - open-source Ruby implementation.
  - Qizmt - C# implementation by MySpace.
  - Cell Broadband Engine implementation in C.
- - ```FAIL``` DryadLinq - Microsoft Research research project, based on Linq and Microsoft Dryad (*failed - Microsoft had finally chosen Apache Hadoop for their Azure platform*).
+ - ```FAIL``` DryadLinq - Microsoft Research research project (lol), based on Linq and Microsoft Dryad (*failed - Microsoft had finally chosen Apache Hadoop for their Azure platform*).
  - And a legion of Hadoop-based implementations.
 
 --------------------------------
@@ -121,20 +117,51 @@ Other Hadoop-related projects at Apache include:
  - ZooKeeper: A high-performance coordination service for distributed applications.
 
 ## Architecture
-### Expedience
-### Jobs scheduler
-### Most common problems
-## Job design
-## Examples
+
+> ![Apache Hadoop topology architecture](http://upload.wikimedia.org/wikipedia/en/2/2b/Hadoop_1.png)
+
+### Infrastructure
+
+The Hadoop Map/Reduce framework has a master/slave architecture and because of it's batch processing nature, Hadoop operates with so called *jobs*. It has a single master server or JobTracker and several slave servers or TaskTrackers, one per node in the cluster. The JobTracker is the point of interaction between users and the framework. Users submit map/reduce jobs to the JobTracker, which puts them in a queue of pending jobs and executes them on a first-come/first-served basis. The JobTracker manages the assignment of map and reduce tasks to the TaskTrackers and re-executes the failed tasks. The TaskTrackers execute tasks upon instruction from the JobTracker and also handle data motion between the map and reduce phases.
+
+Typically the compute nodes and the storage nodes are the same, that is, the MapReduce framework and the Hadoop Distributed File System are running on the same set of nodes. This configuration allows the framework to effectively schedule tasks on the nodes where data is already present, resulting in very high aggregate bandwidth across the cluster.
+
+### Apache HDFS
+
+Like Hadoop Map/Reduce, HDFS follows a master/slave architecture. An HDFS installation consists of a single NameNode, a master server that manages the filesystem namespace and regulates access to files by clients. In addition, there are a number of Datanodes, one per node in the cluster, which manage storage attached to the nodes that they run on. The NameNode makes filesystem namespace operations like opening, closing, renaming etc. of files and directories available via an RPC interface. It also determines the mapping of blocks to DataNodes. The DataNodes are responsible for serving read and write requests from filesystem clients, they also perform block creation, deletion, and replication upon instruction from the NameNode.
+
+## Data flow
+
+Minimally, applications specify the input/output locations and supply map and reduce functions via implementations of appropriate interfaces and/or abstract classes. These, and other job parameters, comprise the job configuration. The Hadoop job client then submits the job (jar/executable etc.) and configuration to the JobTracker which then assumes the responsibility of distributing the software/configuration to the slaves, scheduling tasks and monitoring them, providing status and diagnostic information to the job-client.
+
+## API
+
+ - General workflow
+ - JobConf
+ - InputFormat
+ - Mapper
+ - Combiner
+ - Partitioner
+ - Reducer
+ - OutputFormat
+
 ## Distributions
+
+[`RU` BigData Dive '13 - Обзор дистрибутивов Hadoop](http://www.slideshare.net/Lavrentieva/hadoop-hadoop)
+
+ - Apache Hadoop
+ - Cloudera CDH
+ - Hortonworks HDP
+ - MapR 
+ - PivotalHD
+ - Intel Hadoop Distribution
+
+
 ## Links & references
 
---------------------------------
-
-# Apache HDFS
-
-## Features and overview
-## Other supported file systems
+ - [Projects using Apache Hadoop](http://wiki.apache.org/hadoop/PoweredBy)
+ - [Yahoo Hadoop blog](http://developer.yahoo.com/blogs/hadoop)
+ - [Pythian BigData Videos](http://www.youtube.com/playlist?list=PLbJSpUhUkuUisc-13zbAEDcwdRw20wnGR)
 
 --------------------------------
 
@@ -178,5 +205,3 @@ Other Hadoop-related projects at Apache include:
 ## Apache Sqoop
 ## Cascading
 ## Scalding
-
-  [1]: http://en.wikipedia.org/wiki/MapReduce
