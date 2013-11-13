@@ -128,11 +128,40 @@ Typically the compute nodes and the storage nodes are the same, that is, the Map
 
 ### Apache HDFS
 
+A distributed file system is designed to hold a large amount of data and provide access to this data to many clients distributed across a network. There are a number of distributed file systems that solve this problem in different ways.
+NFS, the Network File System, is the most ubiquitous distributed file system. It is one of the oldest still in use. While its design is straightforward, it is also very constrained. NFS provides remote access to a single logical volume stored on a single machine. An NFS server makes a portion of its local file system visible to external clients. The clients can then mount this remote file system directly into their own Linux file system, and interact with it as though it were part of the local drive.
+
+One of the primary advantages of this model is its transparency. Clients do not need to be particularly aware that they are working on files stored remotely. The existing standard library methods like `open()`, `close()`, `fread()`, etc. will work on files hosted over NFS.
+
+But as a distributed file system, it is limited in its power. The files in an NFS volume all reside on a single machine. This means that it will only store as much information as can be stored in one machine, and does not provide any reliability guarantees if that machine goes down (e.g., by replicating the files to other servers). Finally, as all the data is stored on a single machine, all the clients must go to this machine to retrieve their data. This can overload the server if a large number of clients must be handled. Clients must also always copy the data to their local machines before they can operate on it.
+
 Like Hadoop Map/Reduce, HDFS follows a master/slave architecture. An HDFS installation consists of a single NameNode, a master server that manages the filesystem namespace and regulates access to files by clients. In addition, there are a number of Datanodes, one per node in the cluster, which manage storage attached to the nodes that they run on. The NameNode makes filesystem namespace operations like opening, closing, renaming etc. of files and directories available via an RPC interface. It also determines the mapping of blocks to DataNodes. The DataNodes are responsible for serving read and write requests from filesystem clients, they also perform block creation, deletion, and replication upon instruction from the NameNode.
+
+ - HDFS is designed to be robust to a number of the problems that other DFS's such as NFS are vulnerable to. In particular:
+ - HDFS is designed to store a very large amount of information (terabytes or petabytes). This requires spreading the data across a large number of machines. It also supports much larger file sizes than NFS.
+ - HDFS should store data reliably. If individual machines in the cluster malfunction, data should still be available.
+ - HDFS should provide fast, scalable access to this information. It should be possible to serve a larger number of clients by simply adding more machines to the cluster.
+ - HDFS should integrate well with Hadoop MapReduce, allowing data to be read and computed upon locally when possible.
+
+But while HDFS is very scalable, its high performance design also restricts it to a particular class of applications; it is not as general-purpose as NFS. There are a large number of additional decisions and trade-offs that were made with HDFS. In particular:
+
+ - Applications that use HDFS are assumed to perform long sequential streaming reads from files. HDFS is optimized to provide streaming read performance; this comes at the expense of random seek times to arbitrary positions in files.
+ - Data will be written to the HDFS once and then read several times; updates to files after they have already been closed are not supported. (An extension to Hadoop will provide support for appending new data to the ends of files; it is scheduled to be included in Hadoop 0.19 but is not available yet.)
+ - Due to the large size of files, and the sequential nature of reads, the system does not provide a mechanism for local caching of data. The overhead of caching is great enough that data should simply be re-read from HDFS source.
+ - Individual machines are assumed to fail on a frequent basis, both permanently and intermittently. The cluster must be able to withstand the complete failure of several machines, possibly many happening at the same time (e.g., if a rack fails all together). While performance may degrade proportional to the number of machines lost, the system as a whole should not become overly slow, nor should information be lost. Data replication strategies combat this problem.
+The design of HDFS is based on the design of GFS, the Google File System. Its design was described in a paper published by Google.
+
+DataNodes holding blocks of multiple files with a replication factor of 2. The NameNode maps the filenames onto the block IDs:
+![DataNodes holding blocks of multiple files with a replication factor of 2. The NameNode maps the filenames onto the block IDs](http://farm3.static.flickr.com/2050/3529146393_5c2e2c8065_o.png)
+
 
 ## Data flow
 
 Minimally, applications specify the input/output locations and supply map and reduce functions via implementations of appropriate interfaces and/or abstract classes. These, and other job parameters, comprise the job configuration. The Hadoop job client then submits the job (jar/executable etc.) and configuration to the JobTracker which then assumes the responsibility of distributing the software/configuration to the slaves, scheduling tasks and monitoring them, providing status and diagnostic information to the job-client.
+
+Common data flow is showed on the following diagram:
+
+![Common data flow diagram](http://farm3.static.flickr.com/2275/3529146683_c8247ff6db_o.png)
 
 ## API
 
@@ -147,7 +176,7 @@ Minimally, applications specify the input/output locations and supply map and re
 
 ## Distributions
 
-[`RU` BigData Dive '13 - Обзор дистрибутивов Hadoop](http://www.slideshare.net/Lavrentieva/hadoop-hadoop)
+The most popular Hadoop distributions include:
 
  - Apache Hadoop
  - Cloudera CDH
@@ -156,12 +185,16 @@ Minimally, applications specify the input/output locations and supply map and re
  - PivotalHD
  - Intel Hadoop Distribution
 
+> `RU` [BigData Dive '13 - Обзор дистрибутивов Hadoop](http://www.slideshare.net/Lavrentieva/hadoop-hadoop)
+> 
+> [![BigData Dive '13 - Обзор дистрибутивов Hadoop](http://img.youtube.com/vi/Is0N6TSptNY/0.jpg)](http://www.youtube.com/watch?v=Is0N6TSptNY)
 
 ## Links & references
 
+ - [Yahoo Hadoop blog](http://developer.yahoo.com/blogs/hadoop) *(very usefull and well-structured)*
+ - [Pythian BigData Videos](http://www.youtube.com/playlist?list=PLbJSpUhUkuUisc-13zbAEDcwdRw20wnGR) *(lots of short overview movies on different BigData technologies incl. Apache Hadoop)*
+ - [Hadoop best practices and design patterns](http://developer.yahoo.com/blogs/hadoop/apache-hadoop-best-practices-anti-patterns-465.html)
  - [Projects using Apache Hadoop](http://wiki.apache.org/hadoop/PoweredBy)
- - [Yahoo Hadoop blog](http://developer.yahoo.com/blogs/hadoop)
- - [Pythian BigData Videos](http://www.youtube.com/playlist?list=PLbJSpUhUkuUisc-13zbAEDcwdRw20wnGR)
 
 --------------------------------
 
