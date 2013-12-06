@@ -12,7 +12,7 @@
 - [Apache Hadoop](#apache-hadoop)
 	- [Overview](#overview)
 	- [Architecture](#architecture)
-	    - [Infrastructure](#infrastructure)
+        - [Infrastructure](#infrastructure)
         - [Apache HDFS](#apache-hdfs)
         - [Data flow](#data-flow)
 	- [API](#API)
@@ -42,6 +42,7 @@
 	- [Examples](#examples-2)
 	- [Links & references](#links--references-3)
 - [Other tools](#other-tools)
+    - [Cloudera Hue](#cloudera-hue)
 	- [Apache Sqoop](#apache-sqoop)
 	- [Cascading](#cascading)
 	- [Scalding](#scalding)
@@ -184,24 +185,24 @@ So we can see the following phases of job execution in Hadoop:
 
 ## API
 
- - JobConf
- - InputFormat
- - Mapper
- - Combiner
- - Partitioner
- - Reducer
- - OutputFormat
+- JobConf
+- InputFormat
+- Mapper
+- Combiner
+- Partitioner
+- Reducer
+- OutputFormat
 
 ## Distributions
 
 The most popular Hadoop distributions include:
 
- - Apache Hadoop
- - Cloudera CDH
- - Hortonworks HDP
- - MapR 
- - PivotalHD
- - Intel Hadoop Distribution
+- Apache Hadoop
+- Cloudera CDH
+- Hortonworks HDP
+- MapR 
+- PivotalHD
+- Intel Hadoop Distribution
 
 > `RU` [BigData Dive '13 - Hadoop distributions overview & bottlenecks tuning](http://www.slideshare.net/Lavrentieva/hadoop-hadoop)
 > 
@@ -209,10 +210,10 @@ The most popular Hadoop distributions include:
 
 ## Links & references
 
- - [Yahoo Hadoop blog](http://developer.yahoo.com/blogs/hadoop) *(very usefull and well-structured)*
- - [Pythian BigData Videos](http://www.youtube.com/playlist?list=PLbJSpUhUkuUisc-13zbAEDcwdRw20wnGR) *(lots of short overview videos on different BigData-related technologies incl. Apache Hadoop)*
- - [Hadoop best practices and design patterns](http://developer.yahoo.com/blogs/hadoop/apache-hadoop-best-practices-anti-patterns-465.html)
- - [Projects using Apache Hadoop](http://wiki.apache.org/hadoop/PoweredBy)
+- [Yahoo Hadoop blog](http://developer.yahoo.com/blogs/hadoop) *(very usefull and well-structured)*
+- [Pythian BigData Videos](http://www.youtube.com/playlist?list=PLbJSpUhUkuUisc-13zbAEDcwdRw20wnGR) *(lots of short overview videos on different BigData-related technologies incl. Apache Hadoop)*
+- [Hadoop best practices and design patterns](http://developer.yahoo.com/blogs/hadoop/apache-hadoop-best-practices-anti-patterns-465.html)
+- [Projects using Apache Hadoop](http://wiki.apache.org/hadoop/PoweredBy)
 
 --------------------------------
 
@@ -270,22 +271,43 @@ In practice, row-oriented storage layouts are well-suited for OLTP-like workload
 ## API Bindings
 ## Links & references
 
- - [The Apache HBase Reference Guide](http://hbase.apache.org/book/book.html)
+- [The Apache HBase Reference Guide](http://hbase.apache.org/book/book.html)
 
 --------------------------------
  
 # Apache Hive
 
 ## Overview
+
+Apache Hive is a data warehouse infrastructure built on top of Hadoop for providing data summarization, query, and analysis. While initially developed by Facebook, Apache Hive is now used and developed by other companies such as Netflix. Amazon maintains a software fork of Apache Hive that is included in Amazon Elastic MapReduce on Amazon Web Services.
+
+Apache Hive supports analysis of large datasets stored in Hadoop's HDFS and compatible file systems such as Amazon S3 filesystem. It provides an SQL-like language called HiveQL while maintaining full support for map/reduce. To accelerate queries, it provides indexes, including bitmap indexes.
+
+By default, Hive stores metadata in an embedded Apache Derby database, and other client/server databases like MySQL can optionally be used. Currently, there are four file formats supported in Hive, which are TEXTFILE, SEQUENCEFILE, ORC and RCFILE.
+
+Other features of Hive include:
+
+- Indexing to provide acceleration, index type including compaction and Bitmap index as of 0.10, more index types are planned.
+- Different storage types such as plain text, RCFile, HBase, ORC, and others.
+- Metadata storage in an RDBMS, significantly reducing the time to perform semantic checks during query execution.
+- Operating on compressed data stored into Hadoop ecosystem, algorithm including gzip, bzip2, snappy, etc.
+- Built-in user defined functions (UDFs) to manipulate dates, strings, and other data-mining tools. Hive supports extending the  
+- UDF set to handle use-cases not supported by built-in functions.
+- SQL-like queries (Hive QL), which are implicitly converted into map-reduce jobs.
+
 ## Internal workflow
 ## HiveQL
+
+While based on SQL, HiveQL does not strictly follow the full SQL-92 standard. HiveQL offers extensions not in SQL, including multitable inserts and create table as select, but only offers basic support for indexes. Also, HiveQL lacks support for transactions and materialized views, and only limited subquery support. There are plans for adding support for insert, update, and delete with full ACID functionality.
+Internally, a compiler translates HiveQL statements into a directed acyclic graph of MapReduce jobs, which are submitted to Hadoop for execution.
+
 ### Definition & features
 ### Syntax basics
 ### HiveQL/SQL comparison
 ## Examples
 ## Links & references
 
- - [Unit testing in Apache Hive](http://dev.bizo.com/2011/04/hive-unit-testing.html)
+- [Unit testing in Apache Hive](http://dev.bizo.com/2011/04/hive-unit-testing.html)
 
 --------------------------------
 
@@ -304,6 +326,7 @@ In practice, row-oriented storage layouts are well-suited for OLTP-like workload
 
 # Other tools
 
+## Cloudera Hue
 ## Apache Sqoop
 ## Cascading
 ## Scalding
