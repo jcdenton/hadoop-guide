@@ -291,8 +291,7 @@ Other features of Hive include:
 - Different storage types such as plain text, RCFile, HBase, ORC, and others.
 - Metadata storage in an RDBMS, significantly reducing the time to perform semantic checks during query execution.
 - Operating on compressed data stored into Hadoop ecosystem, algorithm including gzip, bzip2, snappy, etc.
-- Built-in user defined functions (UDFs) to manipulate dates, strings, and other data-mining tools. Hive supports extending the  
-- UDF set to handle use-cases not supported by built-in functions.
+- Built-in user defined functions (UDFs) to manipulate dates, strings, and other data-mining tools. Hive supports extending the - UDF set to handle use-cases not supported by built-in functions.
 - SQL-like queries (Hive QL), which are implicitly converted into map-reduce jobs.
 
 ## Internal workflow
